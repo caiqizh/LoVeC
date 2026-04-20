@@ -5,7 +5,7 @@ from nltk.tokenize import sent_tokenize
 from factchecker_sentence_num import get_factcheck_results, estimate_overall_cost
 from abstrain_detection import is_response_abstained
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 
 # Load the data
 # input_path = "sft-data/predictions.json"
