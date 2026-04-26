@@ -254,34 +254,6 @@ The `factchecking/` directory contains the full fact-checking pipeline used for 
 
 ---
 
-## Key Design Choices
-
-### Reward Function
-
-We use a **log-based (binary cross-entropy) reward** that sharply penalizes overconfident errors:
-
-```python
-def improved_log_reward(confidence, correctness, scale=10.0):
-    p = np.clip(confidence / 10, 1e-6, 1 - 1e-6)
-    y = correctness / 10
-    nll = -(y * math.log(p) + (1 - y) * math.log(1 - p))
-    reward = scale * (1 - (nll - best_nll) / (worst_nll - best_nll))
-    reward += 0.15 * correctness  # small correctness bonus
-    return reward
-```
-
-Alternative reward functions (linear, quadratic) are also available in [`evaluating/grpo_reward_evaluator.py`](evaluating/grpo_reward_evaluator.py).
-
-### Why RL over SFT?
-
-| Aspect | SFT | RL |
-|---|---|---|
-| Supervision signal | Dense token-level labels | Sparse, delayed rewards ✅ |
-| Ordinal modeling | No inherent ordering | Directly optimizes ordinal alignment ✅ |
-| Credit assignment | Limited | Distributes across statement–confidence pairs ✅ |
-
----
-
 ## Citation
 
 If you find this work useful, please cite our paper:
@@ -294,23 +266,3 @@ If you find this work useful, please cite our paper:
   year      = {2026}
 }
 ```
-
----
-
-## License
-
-This project is released for academic research purposes. Please refer to the licenses of the individual datasets and models used:
-
-| Asset | License |
-|---|---|
-| [Llama-3](https://github.com/meta-llama/llama3) | Meta Llama 3 Community License |
-| [Gemma-2](https://ai.google.dev/gemma) | Gemma Terms of Use |
-| [WildHallucinations](https://huggingface.co/datasets/wentingzhao/WildHallucinations) | MIT |
-| [TRL](https://github.com/huggingface/trl) | Apache 2.0 |
-| [vLLM](https://github.com/vllm-project/vllm) | Apache 2.0 |
-
----
-
-## Acknowledgements
-
-This work was conducted using Google Cloud Platform with A100 80GB GPUs. We thank the developers of [TRL](https://github.com/huggingface/trl), [vLLM](https://github.com/vllm-project/vllm), and [PEFT](https://github.com/huggingface/peft) for their excellent open-source libraries.
